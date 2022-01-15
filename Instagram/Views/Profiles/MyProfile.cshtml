@@ -1,0 +1,36 @@
+﻿@section Styles{ 
+<style>
+    body{
+        background-color:#FAFAFA;
+    }
+    .img-profiles{
+        border-radius : 50px;
+    }
+</style>
+}
+
+@model InstagramUser;
+
+<section class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <img src="~/Uploads/@Model.Photo " class="img-thumbnail img-profiles" />
+            </div>
+            
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group">
+                    <h1>@Model.Name</h1>
+                </div>
+
+                <div class="form-group">
+                    <h1>@Model.Bio</h1>
+                </div>
+
+                <div class="form-group">
+                    @*<h1>@Model.Name</h1>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

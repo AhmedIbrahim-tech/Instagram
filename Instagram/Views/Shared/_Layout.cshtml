@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> @ViewData["Title"] - Instagram</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/Style.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", required: false)
+    <style>
+
+        .searchdiv {float: right; border-radius: 4px; border: 1px solid silver; padding: 4px; text-align: center; font-size: 10px; }
+        .searchdiv input {border: 0;}
+        .searchdiv input:focus {border: 0; outline: none;}
+        .vavbar {float: right;}
+        .vavbar .nav-item{margin:0 15px 0 0}
+        .img-Profile {height: 100px;width: 100px;border-radius: 50px; }
+        .btn_save_profile {margin-top: 25px;display: block; width:100%; }
+        .inputError{border:1px solid red}
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/insta.png" /> 
+                </a>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <div class="row" style="width:100%">
+                        <div class="col-6">
+                            <div class="searchdiv">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                </svg>
+                                <input placeholder="Search" />
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <partial name="_LoginPartial">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - Instagram - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
