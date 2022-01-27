@@ -25,14 +25,20 @@ namespace Instagram.Classes
             Db = _Db;
         }
 
-        public void SaveImage(IFormFile file)
+        public CBase(UserManager<InstagramUser> _manager, InstagramContext _Db)
         {
-            if (file != null)
+            manager = _manager;
+            Db = _Db;
+        }
+
+        public void SaveImage(IFormFile Photo)
+        {
+            if (Photo != null)
             {
-                if (file.FileName.IndexOf(".jpg") > 0 || file.FileName.IndexOf(".jpeg") > 0 || file.FileName.IndexOf(".png") > 0 )
+                if (Photo.FileName.IndexOf(".jpg") > 0 || Photo.FileName.IndexOf(".jpeg") > 0 || Photo.FileName.IndexOf(".png") > 0 )
                 {
-                    string path = Path.Combine(host.WebRootPath, "Uploads", file.FileName);
-                    file.CopyTo(new FileStream(path, FileMode.Create));
+                    string path = Path.Combine(host.WebRootPath, "Uploads", Photo.FileName);
+                    Photo.CopyTo(new FileStream(path, FileMode.Create));
                 }
             }
         }

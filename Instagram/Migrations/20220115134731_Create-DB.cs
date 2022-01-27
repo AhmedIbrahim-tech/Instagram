@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Instagram.Migrations
 {
-    public partial class CreateDb : Migration
+    public partial class CreateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,6 +47,54 @@ namespace Instagram.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "chats",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecondID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_chats", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "follows",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FollowerID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FollowingID = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_follows", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "notifications",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Img = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Href = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsChecked = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_notifications", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,7 +204,7 @@ namespace Instagram.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Post",
+                name: "posts",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -169,9 +217,9 @@ namespace Instagram.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Post", x => x.ID);
+                    table.PrimaryKey("PK_posts", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Post_AspNetUsers_UserID",
+                        name: "FK_posts_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -179,7 +227,7 @@ namespace Instagram.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Story",
+                name: "stories",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -192,9 +240,9 @@ namespace Instagram.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Story", x => x.ID);
+                    table.PrimaryKey("PK_stories", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Story_AspNetUsers_UserID",
+                        name: "FK_stories_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -202,7 +250,28 @@ namespace Instagram.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Like",
+                name: "messages",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SenderID = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ChatID = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_messages", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_messages_chats_ChatID",
+                        column: x => x.ChatID,
+                        principalTable: "chats",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "likes",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
@@ -212,17 +281,43 @@ namespace Instagram.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Like", x => x.ID);
+                    table.PrimaryKey("PK_likes", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Like_AspNetUsers_UserID",
+                        name: "FK_likes_AspNetUsers_UserID",
                         column: x => x.UserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Like_Post_PostID",
+                        name: "FK_likes_posts_PostID",
                         column: x => x.PostID,
-                        principalTable: "Post",
+                        principalTable: "posts",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "seens",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StoryID = table.Column<int>(type: "int", nullable: false),
+                    UserID = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_seens", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_seens_AspNetUsers_UserID",
+                        column: x => x.UserID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_seens_stories_StoryID",
+                        column: x => x.StoryID,
+                        principalTable: "stories",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -267,23 +362,38 @@ namespace Instagram.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_PostID",
-                table: "Like",
+                name: "IX_likes_PostID",
+                table: "likes",
                 column: "PostID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Like_UserID",
-                table: "Like",
+                name: "IX_likes_UserID",
+                table: "likes",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_UserID",
-                table: "Post",
+                name: "IX_messages_ChatID",
+                table: "messages",
+                column: "ChatID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_posts_UserID",
+                table: "posts",
                 column: "UserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Story_UserID",
-                table: "Story",
+                name: "IX_seens_StoryID",
+                table: "seens",
+                column: "StoryID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_seens_UserID",
+                table: "seens",
+                column: "UserID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_stories_UserID",
+                table: "stories",
                 column: "UserID");
         }
 
@@ -305,16 +415,31 @@ namespace Instagram.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Like");
+                name: "follows");
 
             migrationBuilder.DropTable(
-                name: "Story");
+                name: "likes");
+
+            migrationBuilder.DropTable(
+                name: "messages");
+
+            migrationBuilder.DropTable(
+                name: "notifications");
+
+            migrationBuilder.DropTable(
+                name: "seens");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Post");
+                name: "posts");
+
+            migrationBuilder.DropTable(
+                name: "chats");
+
+            migrationBuilder.DropTable(
+                name: "stories");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

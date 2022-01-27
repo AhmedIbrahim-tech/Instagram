@@ -80,7 +80,7 @@ namespace Instagram.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToAction("Profile" , "Profiles");
+                        return RedirectToAction("CreateProfile", "Profiles");
 
                 }
                 foreach (var error in result.Errors)

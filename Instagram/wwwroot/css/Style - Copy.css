@@ -89,9 +89,9 @@ body {
 }
 
 
-    .btned:focus {
-        outline: none;
-    }
+.btned:focus {
+    outline: none;
+}
 
 .Follwing {
     list-style: none;

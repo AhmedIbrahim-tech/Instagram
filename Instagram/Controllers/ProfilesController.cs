@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,6 +20,8 @@ namespace Instagram.Controllers
         private readonly UserManager<InstagramUser> manager;
         private readonly InstagramContext Db;
         CBase cb;
+        private object hosting;
+
         public ProfilesController(IWebHostEnvironment _host, UserManager<InstagramUser> _manager, InstagramContext _Db)
         {
             host = _host;
@@ -33,27 +36,49 @@ namespace Instagram.Controllers
         }
 
         [Authorize]
-        public IActionResult Profile()
+        public IActionResult CreateProfile()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Profile(string Name , string Bio , IFormFile Photos)
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateProfile(string name, string Bio, IFormFile Photos)
         {
+            var user = cb.GetInstagramUser(User);
+            user.Name = name;
+            user.Bio = Bio;
+            user.Photo = Photos.FileName;
             cb.SaveImage(Photos);
-            var u = cb.GetInstagramUser(User);
-            u.Name = Name;
-            u.Bio = Bio;
-            u.Photo = Photos.FileName;
-            cb.saveUser(u);
+            cb.saveUser(user);
             return View();
         }
 
+
         [Authorize]
-        public IActionResult MyProfile()
+        public IActionResult MyPageProfile()
         {
             return View(cb.GetInstagramUser(User));
+        }
+
+        [HttpPost]
+        public IActionResult EditProfile(string name, string Bio)
+        {
+            var user = cb.GetInstagramUser(User);
+            user.Name = name;
+            user.Bio = Bio;
+
+            cb.saveUser(user);
+            return RedirectToAction("MyPageProfile");
+        }
+
+        [HttpPost]
+
+        public async Task<bool> ChangePassword(string OldPassword, string NewPassword)
+        {
+            var user = cb.GetInstagramUser(User);
+            var Result = await manager.ChangePasswordAsync(user, OldPassword, NewPassword);
+            return Result.Succeeded;
         }
 
     }

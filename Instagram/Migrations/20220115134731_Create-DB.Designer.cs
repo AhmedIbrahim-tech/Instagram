@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Instagram.Migrations
 {
     [DbContext(typeof(InstagramContext))]
-    [Migration("20210110124055_CreateDb")]
-    partial class CreateDb
+    [Migration("20220115134731_Create-DB")]
+    partial class CreateDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,45 @@ namespace Instagram.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Instagram.Models.Chat", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("FirstID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SecondID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("chats");
+                });
+
+            modelBuilder.Entity("Instagram.Models.Follow", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("FollowerID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FollowingID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("follows");
+                });
+
             modelBuilder.Entity("Instagram.Models.Like", b =>
                 {
                     b.Property<int>("ID")
@@ -114,7 +153,63 @@ namespace Instagram.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Like");
+                    b.ToTable("likes");
+                });
+
+            modelBuilder.Entity("Instagram.Models.Message", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("ChatID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenderID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ChatID");
+
+                    b.ToTable("messages");
+                });
+
+            modelBuilder.Entity("Instagram.Models.Notification", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Href")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Img")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("notifications");
                 });
 
             modelBuilder.Entity("Instagram.Models.Post", b =>
@@ -143,7 +238,29 @@ namespace Instagram.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Post");
+                    b.ToTable("posts");
+                });
+
+            modelBuilder.Entity("Instagram.Models.Seen", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("StoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("StoryID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("seens");
                 });
 
             modelBuilder.Entity("Instagram.Models.Story", b =>
@@ -172,7 +289,7 @@ namespace Instagram.Migrations
 
                     b.HasIndex("UserID");
 
-                    b.ToTable("Story");
+                    b.ToTable("stories");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -327,11 +444,39 @@ namespace Instagram.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Instagram.Models.Message", b =>
+                {
+                    b.HasOne("Instagram.Models.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Chat");
+                });
+
             modelBuilder.Entity("Instagram.Models.Post", b =>
                 {
                     b.HasOne("Instagram.Areas.Identity.Data.InstagramUser", "User")
                         .WithMany("Posts")
                         .HasForeignKey("UserID");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Instagram.Models.Seen", b =>
+                {
+                    b.HasOne("Instagram.Models.Story", "Story")
+                        .WithMany()
+                        .HasForeignKey("StoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Instagram.Areas.Identity.Data.InstagramUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserID");
+
+                    b.Navigation("Story");
 
                     b.Navigation("User");
                 });
@@ -401,6 +546,11 @@ namespace Instagram.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("Stories");
+                });
+
+            modelBuilder.Entity("Instagram.Models.Chat", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Instagram.Models.Post", b =>

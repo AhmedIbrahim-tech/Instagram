@@ -1,0 +1,165 @@
+﻿@{
+    ViewData["Title"] = @Model.Name;
+}
+@section Styles{
+<style>
+    body {
+        background-color: #FAFAFA;
+    }
+</style>
+}
+
+@model InstagramUser;
+
+
+
+<section class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <img src="~/Uploads/@Model.Photo " class="img-thumbnail img-profiles" />
+            </div>
+
+            <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="form-group ProfileName">
+                    <h3>@Model.Name</h3>
+                    <button class="btned" type="button" data-toggle="modal" data-target="#EditProfilo">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear-wide" viewBox="0 0 16 16">
+                            <path d="M8.932.727c-.243-.97-1.62-.97-1.864 0l-.071.286a.96.96 0 0 1-1.622.434l-.205-.211c-.695-.719-1.888-.03-1.613.931l.08.284a.96.96 0 0 1-1.186 1.187l-.284-.081c-.96-.275-1.65.918-.931 1.613l.211.205a.96.96 0 0 1-.434 1.622l-.286.071c-.97.243-.97 1.62 0 1.864l.286.071a.96.96 0 0 1 .434 1.622l-.211.205c-.719.695-.03 1.888.931 1.613l.284-.08a.96.96 0 0 1 1.187 1.187l-.081.283c-.275.96.918 1.65 1.613.931l.205-.211a.96.96 0 0 1 1.622.434l.071.286c.243.97 1.62.97 1.864 0l.071-.286a.96.96 0 0 1 1.622-.434l.205.211c.695.719 1.888.03 1.613-.931l-.08-.284a.96.96 0 0 1 1.187-1.187l.283.081c.96.275 1.65-.918.931-1.613l-.211-.205a.96.96 0 0 1 .434-1.622l.286-.071c.97-.243.97-1.62 0-1.864l-.286-.071a.96.96 0 0 1-.434-1.622l.211-.205c.719-.695.03-1.888-.931-1.613l-.284.08a.96.96 0 0 1-1.187-1.186l.081-.284c.275-.96-.918-1.65-1.613-.931l-.205.211a.96.96 0 0 1-1.622-.434L8.932.727zM8 12.997a4.998 4.998 0 1 1 0-9.995 4.998 4.998 0 0 1 0 9.996z" />
+                        </svg> Edit Profile
+                    </button>
+                </div>
+
+                <div class="form-group ProfileBio">
+                    <p>@Model.Bio</p>
+                </div>
+
+                <div class="form-group Follwing">
+
+                    <span class="-nal3 ">
+                        <span class="g47SY ">0</span> posts
+                    </span>
+
+                    <a class="-nal3 " href="#" tabindex="0">
+                        <span class="g47SY " title="19">19</span> followers
+                    </a>
+
+                    <a class="-nal3 " href="#" tabindex="0">
+                        <span class="g47SY ">542</span> following
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr />
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="EditProfilo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">General Info</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Password</a>
+                    </li>
+
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    @*Tab_1*@
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <form method="post" asp-controller="Profiles" asp-action="EditProfile">
+                            <div class="modal-body">
+
+                                <div class="form-group">
+                                    <label> Name : </label>
+                                    <input class="form-control" name="Name" id="Name" value="@Model.Name" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label> Bio : </label>
+                                    <textarea name="Bio" id="Bio" class="form-control">@Model.Bio</textarea>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    @*Tab_2*@
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        <div class="form-group">
+                            <label> Current Password : </label>
+                            <input class="form-control" type="password" autocomplete="new-password" id="OldPass" />
+
+                        </div>
+                        <div class="form-group">
+                            <label> New Password : </label>
+                            <input class="form-control" type="password" autocomplete="off" id="NewPass" />
+
+                        </div>
+                        <div class="form-group">
+                            <label> Confirm Password : </label>
+                            <input class="form-control" type="password" autocomplete="off" id="ConfirmPass" />
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="ChangePassword" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+
+    $("#ChangePassword").on("click", function () {
+        var Oldpassword = document.getElementById("OldPass");
+        var Newpassword = document.getElementById("NewPass");
+        var Confirmpassword = document.getElementById("ConfirmPass");
+
+        if (Oldpassword.value.replace(' ', '') == '') {
+            Oldpassword.classList.add("inputError");
+            return false;
+        }
+
+        if (Newpassword.value.Length < 6 ) {
+            Newpassword.classList.add("inputError");
+            return false;
+        }
+
+        if (Confirmpassword.value != Newpassword.value) {
+            Confirmpassword.classList.add("inputError");
+            return false;
+        }
+    });
+
+</script>
+}
