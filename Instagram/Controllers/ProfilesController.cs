@@ -73,7 +73,6 @@ namespace Instagram.Controllers
         }
 
         [HttpPost]
-
         public async Task<bool> ChangePassword(string OldPassword, string NewPassword)
         {
             var user = cb.GetInstagramUser(User);

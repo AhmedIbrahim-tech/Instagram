@@ -86,7 +86,7 @@ namespace Instagram.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return RedirectToAction("Profile", "Profiles");
+                    return RedirectToAction("MyPageProfile", "Profiles");
                 }
                 if (result.RequiresTwoFactor)
                 {
